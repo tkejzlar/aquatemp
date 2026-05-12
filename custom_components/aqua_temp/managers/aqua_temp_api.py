@@ -496,6 +496,13 @@ class AquaTempAPI:
         token = object_result.get(HTTP_HEADER_X_TOKEN)
 
         if token is None:
+            _LOGGER.warning(
+                "Login failed (no x-token in response). "
+                "error_code=%s, error_msg=%s, error_msg_code=%s",
+                login_response.get("error_code"),
+                login_response.get("error_msg"),
+                login_response.get("error_msg_code"),
+            )
             self.set_token()
             raise LoginError()
 
