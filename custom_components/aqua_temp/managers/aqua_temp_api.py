@@ -5,6 +5,7 @@ import hashlib
 import json
 import logging
 import sys
+import unicodedata
 
 from aiohttp import ClientResponseError, ClientSession
 
@@ -502,6 +503,30 @@ class AquaTempAPI:
                 login_response.get("error_code"),
                 login_response.get("error_msg"),
                 login_response.get("error_msg_code"),
+            )
+            # Shape-only diagnostics (no credential content), at DEBUG.
+            # If chars != utf8_bytes the password has multibyte unicode; if
+            # nfc_utf8_bytes differs again the input was non-NFC-normalized;
+            # leading/trailing_ws and all_printable catch hidden whitespace
+            # and zero-width chars from copy-paste.
+            pw = config_data.password
+            un = config_data.username
+            _LOGGER.debug(
+                "Login failure diagnostics (shape only): "
+                "password chars=%d, utf8_bytes=%d, nfc_utf8_bytes=%d, "
+                "leading_ws=%s, trailing_ws=%s, all_printable=%s, all_ascii=%s; "
+                "username chars=%d, utf8_bytes=%d, has_plus=%s, has_uppercase=%s",
+                len(pw),
+                len(pw.encode("utf-8")),
+                len(unicodedata.normalize("NFC", pw).encode("utf-8")),
+                pw != pw.lstrip(),
+                pw != pw.rstrip(),
+                all(c.isprintable() for c in pw),
+                pw.isascii(),
+                len(un),
+                len(un.encode("utf-8")),
+                "+" in un,
+                un != un.lower(),
             )
             self.set_token()
             raise LoginError()
