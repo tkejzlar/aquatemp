@@ -65,3 +65,6 @@ target/
 venv/
 
 __test__.py
+
+# MacOS
+.DS_Store
