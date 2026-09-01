@@ -46,6 +46,12 @@ Integration supports **multiple** accounts and devices
 | ------------------------- |
 | Invalid credentials (403) |
 
+> **Password longer than 16 characters?** As of 2026-09-01, the official app/backend silently
+> truncates passwords to 16 characters at registration and login, but this integration hashes the
+> full password — so a longer password will always fail with "Invalid credentials" here even
+> though it works in the app. **Workaround:** change your account password to 16 characters or
+> fewer.
+
 ## HA Device
 
 Device scheme is according to data from the API
