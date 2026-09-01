@@ -95,7 +95,6 @@ class AquaTempClimateEntity(BaseEntity, ClimateEntity, ABC):
 
         if not is_power_on:
             hvac_mode = HVACMode.OFF
-            target_temperature = None
 
         self._attr_min_temp = minimum_temperature
         self._attr_max_temp = maximum_temperature
