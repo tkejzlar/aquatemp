@@ -70,3 +70,18 @@ CUSTOM_PARAMETERS = [
         "platform": None
     },
 ]
+
+# Promotion is a semantic judgement, not derivable from resources.xml, so it is
+# re-applied here after generation to keep regeneration idempotent.
+PROMOTED_PARAMETERS = {
+    "default": {
+        "T02": {"entity_category": None, "state_class": "measurement"},
+        "T03": {"entity_category": None, "state_class": "measurement"},
+        "T05": {"entity_category": None, "state_class": "measurement"},
+    },
+    "device_1442284873216843776": {
+        "T2": {"entity_category": None, "state_class": "measurement"},
+        "T3": {"entity_category": None, "state_class": "measurement"},
+        "T5": {"entity_category": None, "state_class": "measurement"},
+    },
+}

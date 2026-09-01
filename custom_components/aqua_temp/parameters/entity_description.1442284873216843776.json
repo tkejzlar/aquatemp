@@ -967,14 +967,18 @@
     "name": "Inlet water Temp. [T2]",
     "platform": "sensor",
     "device_class": "temperature",
-    "unit_of_measurement": "\u00b0C"
+    "unit_of_measurement": "\u00b0C",
+    "entity_category": null,
+    "state_class": "measurement"
   },
   {
     "key": "T3",
     "name": "Outlet water Temp. [T3]",
     "platform": "sensor",
     "device_class": "temperature",
-    "unit_of_measurement": "\u00b0C"
+    "unit_of_measurement": "\u00b0C",
+    "entity_category": null,
+    "state_class": "measurement"
   },
   {
     "key": "T4",
@@ -988,7 +992,9 @@
     "name": "Ambient Temp. [T5]",
     "platform": "sensor",
     "device_class": "temperature",
-    "unit_of_measurement": "\u00b0C"
+    "unit_of_measurement": "\u00b0C",
+    "entity_category": null,
+    "state_class": "measurement"
   },
   {
     "key": "T6",
