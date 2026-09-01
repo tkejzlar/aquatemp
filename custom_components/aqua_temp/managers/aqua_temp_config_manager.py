@@ -15,6 +15,7 @@ from homeassistant.const import (
     Platform,
     UnitOfTemperature,
 )
+from homeassistant.components.sensor import SensorStateClass
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import translation
 from homeassistant.helpers.entity import DeviceInfo
@@ -394,12 +395,17 @@ class AquaTempConfigManager:
             translation_key = f"{product_id}_{key}".replace("/", "").lower()
 
             if platform == Platform.SENSOR:
+                state_class = data_item.get("state_class")
+
                 sensor_entity = AquaTempSensorEntityDescription(
                     key=key,
                     name=data_item.get("name"),
                     device_class=data_item.get("device_class"),
                     native_unit_of_measurement=data_item.get("unit_of_measurement"),
-                    entity_category=EntityCategory.DIAGNOSTIC,
+                    entity_category=self._get_entity_category(data_item),
+                    state_class=(
+                        None if state_class is None else SensorStateClass(state_class)
+                    ),
                     translation_key=translation_key,
                 )
 
@@ -411,7 +417,7 @@ class AquaTempConfigManager:
                     name=data_item.get("name"),
                     device_class=data_item.get("device_class"),
                     on_value=data_item.get("on_value"),
-                    entity_category=EntityCategory.DIAGNOSTIC,
+                    entity_category=self._get_entity_category(data_item),
                     translation_key=translation_key,
                 )
 
@@ -525,6 +531,21 @@ class AquaTempConfigManager:
             result = self._entity_descriptions.get(PRODUCT_ID_DEFAULT)
 
         return result
+
+    @staticmethod
+    def _get_entity_category(data_item: dict) -> EntityCategory | None:
+        """Resolve entity_category for a JSON-defined entity.
+
+        An absent key keeps the historical DIAGNOSTIC behaviour, so every product
+        profile that does not opt in is unaffected. An explicit null promotes the
+        entity to the device's primary section.
+        """
+        if "entity_category" not in data_item:
+            return EntityCategory.DIAGNOSTIC
+
+        value = data_item["entity_category"]
+
+        return None if value is None else EntityCategory(value)
 
     @staticmethod
     def _get_product_file(parameter: ProductParameter, product_id):
