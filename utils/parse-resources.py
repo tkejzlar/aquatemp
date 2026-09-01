@@ -8,7 +8,7 @@ import xmltodict
 
 from custom_components.aqua_temp.common.consts import ProductParameter
 from utils.common.component_handlers import ComponentHandlers
-from utils.common.consts import CUSTOM_PARAMETERS
+from utils.common.consts import CUSTOM_PARAMETERS, PROMOTED_PARAMETERS
 from utils.devices.default.consts import PARAMETER_MAPPING as PARAMETER_MAPPING_DEFAULT
 from utils.devices.device_1245226668902080512.consts import (
     PARAMETER_MAPPING as PARAMETER_MAPPING_1245226668902080512,
@@ -80,6 +80,8 @@ class Test:
 
                         parameters.extend(category_parameters)
 
+                self._apply_promotions(device, parameters)
+
                 # with open(json_file_path, "w+") as json_file:
                 #    json_file.write(json.dumps(parameters, indent=4))
 
@@ -144,6 +146,16 @@ class Test:
             index += 1
 
         return result
+
+    @staticmethod
+    def _apply_promotions(device, parameters):
+        promoted = PROMOTED_PARAMETERS.get(device, {})
+
+        for parameter in parameters:
+            promotion = promoted.get(parameter.get("key"))
+
+            if promotion is not None:
+                parameter.update(promotion)
 
 
 try:
